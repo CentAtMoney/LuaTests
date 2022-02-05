@@ -1,1 +1,6 @@
-target_sources(${INTERPRETER} PUBLIC main.c)
+target_sources(${INTERPRETER} PRIVATE 
+gl.c
+main.cpp
+shader.cpp
+logger.cpp
+)
