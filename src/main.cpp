@@ -1,3 +1,6 @@
+
+#include "shader.h"
+
 #include "glad/gl.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -11,9 +14,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-#include "shader.h"
+#include <typeinfo>
+#include <typeindex>
+#include <vector>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
 
@@ -42,7 +48,7 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, 800, 600);
 
-    Shader triangleShader("../shaders/triangle.vert", "../shaders/triangle.frag");
+    shader triangleShader("../shaders/triangle.vert", "../shaders/triangle.frag");
 
 
     float verticies[] = {
@@ -83,7 +89,7 @@ int main(int argc, char** argv)
 
     const glm::vec3 normal(0.0f, 0.0f, 1.0f);
 
-    GLint transform_uniform = glGetUniformLocation(triangleShader.getProgramId(), "transform");
+    GLint transform_uniform = triangleShader.get_uniform_location("transform");
 
     while(!glfwWindowShouldClose(window)) 
     {

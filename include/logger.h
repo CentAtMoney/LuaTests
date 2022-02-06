@@ -3,7 +3,7 @@
 
 #include <string>
 
-class Logger
+class logger
 {
 public:
     static void log(std::string message);

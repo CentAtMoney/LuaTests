@@ -2,61 +2,70 @@
 
 #include <fstream>
 
-Shader::Shader(std::string vertexPath, std::string fragmentPath) :
-    programId{glCreateProgram()}
+shader::shader(const std::string& vertex_path, const std::string& fragment_path) :
+    program_id{glCreateProgram()}
 {
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    read_shader_source(vertexShader, vertexPath);
-    read_shader_source(fragmentShader, fragmentPath);
+    read_shader_source(vertex_shader, vertex_path);
+    read_shader_source(fragment_shader, fragment_path);
 
-    glCompileShader(vertexShader);
-    glCompileShader(fragmentShader);
+    glCompileShader(vertex_shader);
+    glCompileShader(fragment_shader);
 
     int success;
-    char infoLog[512];
+    char info_log[512];
 
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
     if(!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        throw shader_compile_error(vertexPath, infoLog);
+        glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
+        throw shader_compile_error(vertex_path, info_log);
     }
 
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
     if(!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        throw shader_compile_error(fragmentPath, infoLog);
+        glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
+        throw shader_compile_error(fragment_path, info_log);
     } 
 
-    glAttachShader(programId, vertexShader);
-    glAttachShader(programId, fragmentShader);
+    glAttachShader(program_id, vertex_shader);
+    glAttachShader(program_id, fragment_shader);
 
-    glLinkProgram(programId);
+    glLinkProgram(program_id);
 
-    glGetProgramiv(programId, GL_LINK_STATUS, &success);
+    glGetProgramiv(program_id, GL_LINK_STATUS, &success);
     if(!success) {
-        glGetProgramInfoLog(programId, 512, NULL, infoLog);
-        throw shader_link_error(infoLog);
+        glGetProgramInfoLog(program_id, 512, NULL, info_log);
+        throw shader_link_error(info_log);
     } 
 
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
 
 }
 
-Shader::~Shader()
+shader::~shader()
 {
-    glDeleteProgram(programId);
+    glDeleteProgram(program_id);
 }
 
 
-void Shader::use() 
+void shader::use() const
 {
-    glUseProgram(programId);
+    glUseProgram(program_id);
 }
 
-void Shader::read_shader_source(GLuint shader, std::string path) {
+GLuint shader::get_program_id() const {
+    return program_id;
+}
+
+GLint shader::get_uniform_location(const std::string& name) const
+{
+    return glGetUniformLocation(program_id, name.c_str());
+}
+
+void shader::read_shader_source(GLuint shader, const std::string& path) {
 
     //read file and put contents in source
     std::ifstream ifstream(path, std::ios::binary | std::ios::ate);
@@ -74,16 +83,13 @@ void Shader::read_shader_source(GLuint shader, std::string path) {
     delete[] source;
 }
 
-GLuint Shader::getProgramId() const {
-    return programId;
-}
 
-shader_compile_error::shader_compile_error(std::string path, std::string what) :
+shader_compile_error::shader_compile_error(const std::string& path, const std::string& what) :
     std::runtime_error(path + ": " + what)
 {
 }
 
-shader_link_error::shader_link_error(std::string what) :
+shader_link_error::shader_link_error(const std::string& what) :
     std::runtime_error(what)
 {
 }

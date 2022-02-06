@@ -4,35 +4,36 @@
 #include <string>
 #include <stdexcept>
 
-class Shader 
+class shader 
 {
 public:
-    Shader(std::string vertexPath, std::string fragmentPath);
-    ~Shader();
+    shader(const std::string& vertex_path, const std::string& fragment_path);
+    ~shader();
 
-    void use();
+    void use() const;
 
-    GLuint getProgramId() const;
+    GLuint get_program_id() const;
+    GLint get_uniform_location(const std::string& name) const;
 
 protected:
 
-    void read_shader_source(GLuint shader, std::string path);
+    static void read_shader_source(GLuint shader, const std::string& path);
 
-    GLuint programId;
+    GLuint program_id;
 };
 
 
 class shader_compile_error : public std::runtime_error
 {
 public:
-    shader_compile_error(std::string path, std::string what);
+    shader_compile_error(const std::string& path, const std::string& what);
 
 };
 
 class shader_link_error : public std::runtime_error
 {
 public:
-    shader_link_error(std::string what);
+    shader_link_error(const std::string& what);
 };
 
 #endif

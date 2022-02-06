@@ -1,6 +1,6 @@
 target_sources(${INTERPRETER} PRIVATE 
-gl.c
 main.cpp
-shader.cpp
+gl.c
 logger.cpp
+shader.cpp
 )
