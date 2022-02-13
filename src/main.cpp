@@ -1,5 +1,6 @@
 
 #include "shader.h"
+#include "application.h"
 
 #include "glad/gl.h"
 #include <GLFW/glfw3.h>
@@ -18,6 +19,9 @@
 #include <typeindex>
 #include <vector>
 
+
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -25,6 +29,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 int main(int argc, char** argv)
 {
+
+    application app;
+
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
