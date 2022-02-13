@@ -1,12 +1,25 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <logger.h>
+#include "publisher.h"
+#include "window.h"
+#include "logger.h"
 
-class application
+#include <string>
+
+
+class application : public publisher
 {
 public:
-    application();
+    struct create_info
+    {
+        window::create_info window_create_info;
+    };
+    application(application::create_info info);
+    ~application();
+
+private:
+    window window_;
 };
 
 

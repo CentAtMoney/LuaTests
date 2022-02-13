@@ -4,4 +4,6 @@ gl.c
 logger.cpp
 shader.cpp
 application.cpp
+publisher.cpp
+window.cpp
 )
