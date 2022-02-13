@@ -6,4 +6,5 @@ shader.cpp
 application.cpp
 publisher.cpp
 window.cpp
+renderer.cpp
 )

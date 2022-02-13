@@ -38,8 +38,8 @@ int main(int argc, char** argv)
     };
 
 
-    application app();
-
+    application app(application_create_info);
+    app.run();
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

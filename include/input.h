@@ -1,24 +1,25 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-
-struct key_event
+struct key_press_event
 {
     int key;
     int scancode;
     int mods;
-}
-
-struct key_press_event : public key_event
-{
 };
 
-struct key_release_event : public key_event
+struct key_release_event
 {
+    int key;
+    int scancode;
+    int mods;
 };
 
-struct key_repeat_event : public key_event
+struct key_repeat_event
 {
+    int key;
+    int scancode;
+    int mods;
 };
 
 struct cursor_move_event
@@ -33,6 +34,17 @@ struct mouse_scroll_event
     double y;
 };
 
+struct mouse_button_press_event
+{
+    int button;
+    int mods;
+};
+
+struct mouse_button_release_event
+{
+    int button;
+    int mods;
+};
 
 
 

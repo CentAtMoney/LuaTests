@@ -7,8 +7,9 @@ void publisher::subscribe(subscriber* subscriber)
 
 void publisher::unsubscribe(subscriber* subscriber)
 {
+    unsubscribe_event e;
     subscribers_.remove(subscriber);
-    subscriber->notify(unsubscribe_event);
+    subscriber->notify(e);
 }
 
 void publisher::publish(const std::any& object)
@@ -21,11 +22,12 @@ void publisher::publish(const std::any& object)
 
 publisher::~publisher()
 {
+    unsubscribe_event e;
     for(subscriber* subscriber : this->subscribers_)
     {
         if(subscriber != nullptr)
         {
-            subscriber->notify(unsubscribe_event);
+            subscriber->notify(e);
         }
     }
 }
