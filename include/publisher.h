@@ -4,6 +4,7 @@
 
 #include <forward_list>
 #include <any>
+#include <vector>
 
 // event sent to subscriber upon publisher destruction and or
 // subscriber unsubscription
@@ -15,6 +16,10 @@ class publisher
 {
 public:
     
+    publisher();
+
+    publisher(std::vector<subscriber*> subscribers);
+
     void subscribe(subscriber* subscriber);
 
     void unsubscribe(subscriber* subsriber);

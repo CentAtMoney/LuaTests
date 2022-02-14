@@ -1,10 +1,17 @@
 #include "application.h"
 
 application::application(application::create_info info) :
-    window_(info.window_create_info)
-{
-    window_.subscribe(this);
-    this->subscribe(&this->renderer_);
+    window_(info.window_create_info),
+    publisher::publisher(info.subscribers),
+    renderer_{},
+    running_{true}
+{   
+
+    // application subscribes to window events
+    this->window_.subscribe(this);
+
+    // renderer subscribes to window events
+    this->window_.subscribe(&this->renderer_);
 
     window_create_event window_create_event = {
         .window = this->window_
@@ -32,6 +39,7 @@ void application::run()
     while(this->running())
     {
         this->renderer_.render();
+        this->window_.swap_buffers();
         this->window_.poll();
     }
 }

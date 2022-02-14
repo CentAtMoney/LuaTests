@@ -4,14 +4,15 @@
 #include "renderer.h"
 #include "publisher.h"
 #include "subscriber.h"
-#include "window.h"
+#include "window/window.h"
 #include "logger.h"
 
 #include <string>
+#include <vector>
 
 struct window_create_event
 {
-    window window;
+    window_t window;
 };
 
 class application : public publisher, subscriber
@@ -20,6 +21,7 @@ public:
     struct create_info
     {
         window::create_info window_create_info;
+        std::vector<subscriber*> subscribers;
     };
     application(application::create_info info);
     ~application();
@@ -31,9 +33,9 @@ public:
     bool running() const;
 
 private:
-    bool running_;
-    renderer renderer_;
     window window_;
+    renderer renderer_;
+    bool running_;
 };
 
 

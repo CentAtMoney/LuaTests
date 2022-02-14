@@ -1,5 +1,5 @@
 
-#include "shader.h"
+#include "graphics/shader.h"
 #include "application.h"
 
 #include "glad/gl.h"
@@ -41,6 +41,7 @@ int main(int argc, char** argv)
     application app(application_create_info);
     app.run();
 
+/*
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -129,5 +130,7 @@ int main(int argc, char** argv)
 
 
     glfwTerminate();
+    */
     return 0;
+
 }
