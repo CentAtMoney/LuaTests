@@ -1,23 +1,22 @@
 #include "application.h"
-
+#include <iostream>
 application::application(application::create_info info) :
-    window_(info.window_create_info),
+    running_{true},
     publisher::publisher(info.subscribers),
-    renderer_{},
-    running_{true}
+    window_(info.window_create_info),
+    renderer_{}
 {   
 
     // application subscribes to window events
     this->window_.subscribe(this);
 
-    // renderer subscribes to window events
-    this->window_.subscribe(&this->renderer_);
+    // renderere subscribes to application events
+    this->subscribe(&this->renderer_);
 
     window_create_event window_create_event = {
-        .window = this->window_
+        .window = &this->window_
     };
     this->publish(window_create_event);
-
 
 }
 
@@ -32,15 +31,18 @@ void application::notify(const std::any& object)
     {
         this->running_ = false;
     }
+    this->publish(object);
+
+    //std::cout << "application event: " << object.type().name() << std::endl;
 }
 
 void application::run()
 {
     while(this->running())
     {
+        this->window_.poll();
         this->renderer_.render();
         this->window_.swap_buffers();
-        this->window_.poll();
     }
 }
 

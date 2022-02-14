@@ -3,8 +3,13 @@
 #include <fstream>
 
 shader::shader(const std::string& vertex_path, const std::string& fragment_path) :
-    program_id{glCreateProgram()}
+    program_id_{glCreateProgram()}
 {
+    if(program_id_ == 0)
+    {
+        throw std::runtime_error("Shader program failed to create.");
+    }
+
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -29,14 +34,14 @@ shader::shader(const std::string& vertex_path, const std::string& fragment_path)
         throw shader_compile_error(fragment_path, info_log);
     } 
 
-    glAttachShader(program_id, vertex_shader);
-    glAttachShader(program_id, fragment_shader);
+    glAttachShader(program_id_, vertex_shader);
+    glAttachShader(program_id_, fragment_shader);
 
-    glLinkProgram(program_id);
+    glLinkProgram(program_id_);
 
-    glGetProgramiv(program_id, GL_LINK_STATUS, &success);
+    glGetProgramiv(program_id_, GL_LINK_STATUS, &success);
     if(!success) {
-        glGetProgramInfoLog(program_id, 512, NULL, info_log);
+        glGetProgramInfoLog(program_id_, 512, NULL, info_log);
         throw shader_link_error(info_log);
     } 
 
@@ -47,22 +52,22 @@ shader::shader(const std::string& vertex_path, const std::string& fragment_path)
 
 shader::~shader()
 {
-    glDeleteProgram(program_id);
+    glDeleteProgram(program_id_);
 }
 
 
 void shader::use() const
 {
-    glUseProgram(program_id);
+    glUseProgram(program_id_);
 }
 
 GLuint shader::get_program_id() const {
-    return program_id;
+    return program_id_;
 }
 
 GLint shader::get_uniform_location(const std::string& name) const
 {
-    return glGetUniformLocation(program_id, name.c_str());
+    return glGetUniformLocation(program_id_, name.c_str());
 }
 
 void shader::read_shader_source(GLuint shader, const std::string& path) {

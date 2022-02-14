@@ -2,9 +2,10 @@
 #define WINDOW_WINDOW_H
 
 #include "publisher.h"
+#include "graphics/extent.h"
 
 #include <string>
-#include "graphics/extent.h"
+#include <GLFW/glfw3.h>
 
 
 using window_id = uint32_t;
@@ -13,6 +14,8 @@ using window_id = uint32_t;
 class window : public publisher
 {
 public:
+
+
     struct create_info
     {
         std::string title;
@@ -35,19 +38,22 @@ public:
 
 private:
 
-    window_id id_;
+    GLFWwindow* glfw_window_;
 
 };
+
 using window_t = window;
+
+
 
 struct window_open_event
 {
-    window_t window;
+    window_t* window;
 };
 
 struct window_close_event
 {
-    window_t window;
+    window_t* window;
 };
 
 struct window_resize_event

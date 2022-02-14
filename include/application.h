@@ -12,7 +12,7 @@
 
 struct window_create_event
 {
-    window_t window;
+    window_t* window;
 };
 
 class application : public publisher, subscriber

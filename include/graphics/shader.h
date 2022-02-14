@@ -19,7 +19,7 @@ protected:
 
     static void read_shader_source(GLuint shader, const std::string& path);
 
-    GLuint program_id;
+    GLuint program_id_;
 };
 
 

@@ -4,40 +4,18 @@
 #include "input.h"
 #include "glad/gl.h"
 
-#include <GLFW/glfw3.h>
+#include <iostream>
+
 #include <map>
 #include <stdexcept>
-#include <iostream>
 
 static bool glad_initialized = false;
 
-/*
-    My solution to not include GLFW/glfw3.h in window.h
-*/
-static window_id next_window_id = 0;
+static std::map<GLFWwindow*, window*> glfw_windows;
 
-static std::map<GLFWwindow*, window_id> glfw_windows;
-
-static std::map<window_id, window*> windows;
-
-
-// this might be really slow idk
 static window* get_window(GLFWwindow* glfw_window)
 {
-    return windows[glfw_windows[glfw_window]];
-}
-// this would definitely be slow if the whole application as a whole had more than 1 window
-static GLFWwindow* get_glfw_window(window_id id)
-{
-    for(auto it = glfw_windows.begin(); it != glfw_windows.end(); it++)
-    {
-        std::cout << it->second << std::endl;
-        if(it->second == id)
-        {
-            return it->first;
-        }
-    }
-    return nullptr;
+    return glfw_windows[glfw_window];
 }
 
 static void key_callback(GLFWwindow* glfw_window, int key, int scancode, int action, int mods)
@@ -123,7 +101,7 @@ static void window_close_callback(GLFWwindow* glfw_window)
 {
     window* window = get_window(glfw_window);
     window_close_event event = {
-        .window = *window
+        .window = window
     };
     window->publish(event);
 }
@@ -132,8 +110,8 @@ static void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int he
 {
     window* window = get_window(glfw_window);
     extent2d extent = {
-        .width = width,
-        .height = height
+        .width = (uint32_t) width,
+        .height = (uint32_t) height
     };
     framebuffer_resize_event event = {
         .extent = extent
@@ -145,8 +123,8 @@ static void window_size_callback(GLFWwindow* glfw_window, int width, int height)
 {
     window* window = get_window(glfw_window);
     extent2d extent = {
-        .width = width,
-        .height = height
+        .width = (uint32_t) width,
+        .height = (uint32_t) height
     };
     window_resize_event event = {
         .extent = extent
@@ -155,15 +133,10 @@ static void window_size_callback(GLFWwindow* glfw_window, int width, int height)
 }
 
 
-window::window(window::create_info info) : 
-    id_(next_window_id++)
+window::window(window::create_info info)
 {
-    windows[this->id_] = this;
 
-    if(glfw_windows.empty())
-    {
-        glfwInit();
-    }
+    glfwInit();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -173,7 +146,8 @@ window::window(window::create_info info) :
 
     if(glfw_window != NULL)
     {
-        glfw_windows[glfw_window] = this->id_;
+        glfw_windows[glfw_window] = this;
+        glfw_window_ = glfw_window;
     }
     else
     {
@@ -181,41 +155,38 @@ window::window(window::create_info info) :
     }
 
 
-    // idk how I would handle changing this for more than 1 window
-    glfwMakeContextCurrent(glfw_window);
 
 
-    glfwSetKeyCallback(glfw_window, key_callback);
-    glfwSetCursorPosCallback(glfw_window, cursor_position_callback);
-    glfwSetMouseButtonCallback(glfw_window, mouse_button_callback);
-    glfwSetScrollCallback(glfw_window, scroll_callback);
-    glfwSetWindowCloseCallback(glfw_window, window_close_callback);
-    glfwSetFramebufferSizeCallback(glfw_window, framebuffer_size_callback);   
-    glfwSetWindowSizeCallback(glfw_window, window_size_callback);
+    glfwSetKeyCallback(glfw_window_, key_callback);
+    glfwSetCursorPosCallback(glfw_window_, cursor_position_callback);
+    glfwSetMouseButtonCallback(glfw_window_, mouse_button_callback);
+    glfwSetScrollCallback(glfw_window_, scroll_callback);
+    glfwSetWindowCloseCallback(glfw_window_, window_close_callback);
+    glfwSetFramebufferSizeCallback(glfw_window_, framebuffer_size_callback);   
+    glfwSetWindowSizeCallback(glfw_window_, window_size_callback);
+
+    glfwMakeContextCurrent(glfw_window_);
 
     if(!glad_initialized)
     {
         gladLoadGL(glfwGetProcAddress);
         glad_initialized = true;
     }
+    glViewport(0,0,info.width,info.height);
+
+    glfwSwapInterval(1);
 }
 
 
 window::~window()
 {
-    GLFWwindow* glfw_window = get_glfw_window(this->id_);
-    if(glfw_window != nullptr)
+    if(glfw_window_ != NULL)
     {
-        glfwDestroyWindow(glfw_window);
-        glfw_windows.erase(glfw_window);
+        glfw_windows.erase(glfw_window_);
+        glfwDestroyWindow(glfw_window_);
     }
 
-    if(glfw_windows.empty())
-    {
-        glfwTerminate();
-    }
-
-    windows.erase(this->id_);
+    glfwTerminate();
 }
 
 void window::poll()
@@ -225,7 +196,5 @@ void window::poll()
 
 void window::swap_buffers()
 {
-    GLFWwindow* glfw_window = get_glfw_window(this->id_);
-
-    glfwSwapBuffers(glfw_window);
+    glfwSwapBuffers(glfw_window_);
 }
