@@ -5,6 +5,8 @@ logger.cpp
 main.cpp
 publisher.cpp
 renderer.cpp
-shader.cpp
-window.cpp
+stb_image.c
+window/window.cpp
+graphics/mesh.cpp
+graphics/shader.cpp
 )

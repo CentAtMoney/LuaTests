@@ -9,6 +9,8 @@
 
 #include <iostream>
 
+#include "stb_image.h"
+
 void renderer::notify(const std::any& object)
 {
     if(object.type() == typeid(framebuffer_resize_event))
@@ -35,6 +37,38 @@ renderer::renderer() :
         0, 3, 2
     })
 {
+
+    int x, y, n;
+    uint8_t* image_data = stbi_load("../images/ugly.png", &x, &y, &n, 0);
+    if(image_data == NULL)
+    {
+        throw std::runtime_error("failed to load image");
+    }
+
+
+    float border_color[] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+    uint32_t texture_;
+    glGenTextures(1, &texture_);
+    glBindTexture(GL_TEXTURE_2D, texture_);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data);
+    stbi_image_free(image_data);
+    image_data = nullptr;
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+
 
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
