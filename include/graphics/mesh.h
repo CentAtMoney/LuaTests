@@ -12,16 +12,24 @@ class mesh
 {
 public:
     mesh(std::vector<vertex> verticies, std::vector<uint32_t> indicies, std::vector<texture2d> textures);
+    ~mesh();
 
     void render(shader shader);
 
-private:
+protected:
     std::vector<vertex> verticies_;
     std::vector<uint32_t> indicies_;
     std::vector<texture2d> textures_;
 
     uint32_t vao_, vbo_, ebo_;
-
 };
+
+// mesh of a rectangular prism with origin at geometric center of it
+class cube_mesh : public mesh
+{
+public:
+    cube_mesh(float length, float width, float depth, std::vector<texture2d> textures);
+};
+
 
 #endif

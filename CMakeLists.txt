@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(INTERPRETER interpreter CACHE INTERNAL "The name of the cmake target")
+
+set(CMAKE_CXX_FLAGS_DEBUG  "-g")
+
 add_executable(${INTERPRETER})
 target_include_directories(${INTERPRETER} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${INTERPRETER} PRIVATE ${CMAKE_DL_LIBS})

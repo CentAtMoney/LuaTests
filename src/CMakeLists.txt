@@ -9,4 +9,5 @@ stb_image.c
 window/window.cpp
 graphics/mesh.cpp
 graphics/shader.cpp
+graphics/vertex.cpp
 )

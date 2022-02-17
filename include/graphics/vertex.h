@@ -6,9 +6,17 @@
 
 struct vertex
 {
+public:
+    vertex();
+    vertex(const vertex& vertex);
+    vertex(float x, float y, float z, float nx, float ny, float nz, float s, float t);
+    vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 tex_coord);
+
     glm::vec3 position;
     glm::vec3 normal;
     glm::vec2 tex_coord;
 };
+
+
 
 #endif // GRAPHICS_VERTEX_H
