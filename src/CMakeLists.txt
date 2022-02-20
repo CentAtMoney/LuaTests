@@ -10,4 +10,5 @@ window/window.cpp
 graphics/mesh.cpp
 graphics/shader.cpp
 graphics/vertex.cpp
+graphics/camera.cpp
 )

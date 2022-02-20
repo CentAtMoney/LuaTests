@@ -35,6 +35,9 @@ public:
     // screen coordinates 
     extent2d get_window_extent();
 
+    void disable_cursor();
+
+    void enable_cursor();
 
 private:
 

@@ -198,3 +198,13 @@ void window::swap_buffers()
 {
     glfwSwapBuffers(glfw_window_);
 }
+
+void window::disable_cursor()
+{
+    glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);    
+}
+
+void window::enable_cursor()
+{
+    glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}

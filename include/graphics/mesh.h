@@ -16,6 +16,10 @@ public:
 
     void render(shader shader);
 
+    // if any changes are made to verticies_ or indicies_ this must be called to send
+    // updated data to gpu. Must called at least once before mesh is rendered
+    void buffer_data();
+
 protected:
     std::vector<vertex> verticies_;
     std::vector<uint32_t> indicies_;

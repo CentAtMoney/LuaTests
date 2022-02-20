@@ -7,10 +7,12 @@ application::application(application::create_info info) :
     renderer_{}
 {   
 
+    window_.disable_cursor();
+
     // application subscribes to window events
     this->window_.subscribe(this);
 
-    // renderere subscribes to application events
+    // renderer subscribes to application events
     this->subscribe(&this->renderer_);
 
     window_create_event window_create_event = {

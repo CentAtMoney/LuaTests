@@ -1,6 +1,11 @@
+// shader.cpp
+
 #include "graphics/shader.h"
 
 #include <fstream>
+#include "glad/gl.h"
+
+#include <glm/gtc/type_ptr.hpp>
 
 shader::shader(const std::string& vertex_path, const std::string& fragment_path) :
     program_id_{glCreateProgram()}
@@ -61,16 +66,32 @@ void shader::use() const
     glUseProgram(program_id_);
 }
 
-GLuint shader::get_program_id() const {
+uint32_t shader::get_program_id() const {
     return program_id_;
 }
 
-GLint shader::get_uniform_location(const std::string& name) const
+int32_t shader::get_uniform_location(const std::string& name) const
 {
     return glGetUniformLocation(program_id_, name.c_str());
 }
 
-void shader::read_shader_source(GLuint shader, const std::string& path) {
+
+void shader::set_uniform(const std::string& name, const glm::mat4& value) const
+{
+    glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void shader::set_uniform(const std::string& name, const glm::vec4& value) const
+{
+    glUniform4fv(get_uniform_location(name), 1, glm::value_ptr(value));
+}
+
+void shader::set_uniform(const std::string& name, const glm::vec3& value) const
+{
+    glUniform3fv(get_uniform_location(name), 1, glm::value_ptr(value));
+}
+
+void shader::read_shader_source(uint32_t shader, const std::string& path) {
 
     //read file and put contents in source
     std::ifstream ifstream(path, std::ios::binary | std::ios::ate);
