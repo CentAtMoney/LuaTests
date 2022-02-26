@@ -18,6 +18,8 @@ public:
 
     void render();
 
+    glm::mat4 get_projection() const;
+
     void set_fov(float fov);
     void set_aspect_ratio(float aspect);
     void set_aspect_ratio(extent2d extent);
@@ -26,7 +28,7 @@ public:
 
 private:
 
-    glm::vec3 camera_pos_;
+    uint64_t frames_;
 
     shader triangle_shader_;
     mesh* mesh_;
@@ -42,8 +44,7 @@ private:
     float sensitivity_;
     cursor_move_event last_move_event_;
 
-
-    glm::mat4 projection_;
+    glm::vec3 camera_velocity_;
 
 };
 

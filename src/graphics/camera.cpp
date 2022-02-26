@@ -6,16 +6,19 @@
 
 #include "graphics/camera.h"
 
-camera::camera(glm::vec3 pos, glm::vec3 target, glm::vec3 up) :
+#include <iostream>
+camera::camera(glm::vec3 pos, glm::vec3 front, glm::vec3 up) :
     pos_(pos),
-    target_(target),
+    front_(front),
     up_(up)
 {
+    
+
 }
 
 glm::mat4 camera::get_view() const
 {
-    return glm::lookAt(pos_, target_, up_);
+    return glm::lookAt(pos_, get_target(), up_);
 }
 
 glm::vec3 camera::get_pos() const
@@ -23,9 +26,9 @@ glm::vec3 camera::get_pos() const
     return pos_;
 }
 
-glm::vec3 camera::get_target() const
+glm::vec3 camera::get_front() const
 {
-    return target_;
+    return front_;
 }
 
 glm::vec3 camera::get_up() const
@@ -33,14 +36,19 @@ glm::vec3 camera::get_up() const
     return up_;
 }
 
+glm::vec3 camera::get_target() const
+{
+    return pos_ + front_;
+}
+
 void camera::set_pos(glm::vec3 pos)
 {
     pos_ = pos;
 }
 
-void camera::set_target(glm::vec3 target)
+void camera::set_front(glm::vec3 front)
 {
-    target_ = target;
+    front_ = front;
 }
 
 void camera::set_up(glm::vec3 up)
@@ -50,8 +58,14 @@ void camera::set_up(glm::vec3 up)
 
 void camera::rotate(float pitch, float yaw, float roll)
 {
-    glm::vec3 euler_angles(pitch, yaw, roll);
-    glm::quat quat(euler_angles);
+    glm::vec3 right = glm::normalize(glm::cross(front_, up_));
+    front_ = glm::rotate(front_, pitch, right);
+    front_ = glm::rotate(front_, yaw, up_);
+    front_ = glm::rotate(front_, roll, front_);
+}
 
-    target_ = glm::normalize(glm::mat3_cast(quat) * target_);
+
+void camera::move(glm::vec3 dx)
+{
+    pos_ += dx;
 }

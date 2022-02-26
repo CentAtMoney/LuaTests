@@ -31,9 +31,63 @@ void renderer::notify(const std::any& object)
         float dy = event.y - last_move_event_.y;
         last_move_event_ = event;
 
-        camera_.rotate(dy * sensitivity_, dx * sensitivity_, 0.0f);
-
-
+        camera_.rotate(- dy * sensitivity_, - dx * sensitivity_, 0.0f);
+    }
+    else if(object.type() == typeid(key_press_event))
+    {
+        key_press_event event = std::any_cast<key_press_event>(object);
+        if(event.key == KEY_W)
+        {
+            camera_velocity_ += glm::vec3(1.0f, 0.0f, 0.0f);
+        }
+        else if(event.key == KEY_S)
+        {
+            camera_velocity_ += glm::vec3(-1.0f, 0.0f, 0.0f);
+        }
+        else if(event.key == KEY_A)
+        {
+            camera_velocity_ += glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+        else if(event.key == KEY_D)
+        {
+            camera_velocity_ += glm::vec3(0.0f, -1.0f, 0.0f);
+        }
+        else if(event.key == KEY_SPACE)
+        {
+            camera_velocity_ += glm::vec3(0.0f, 0.0f, 1.0f);
+        }
+        else if(event.key == KEY_LEFT_SHIFT)
+        {
+            camera_velocity_ += glm::vec3(0.0f, 0.0f, -1.0f);
+        }
+    }
+    else if(object.type() == typeid(key_release_event))
+    {
+        key_release_event event = std::any_cast<key_release_event>(object);
+        if(event.key == KEY_W)
+        {
+            camera_velocity_ -= glm::vec3(1.0f, 0.0f, 0.0f);
+        }
+        else if(event.key == KEY_S)
+        {
+            camera_velocity_ -= glm::vec3(-1.0f, 0.0f, 0.0f);
+        }
+        else if(event.key == KEY_A)
+        {
+            camera_velocity_ -= glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+        else if(event.key == KEY_D)
+        {
+            camera_velocity_ -= glm::vec3(0.0f, -1.0f, 0.0f);
+        }
+        else if(event.key == KEY_SPACE)
+        {
+            camera_velocity_ -= glm::vec3(0.0f, 0.0f, 1.0f);
+        }
+        else if(event.key == KEY_LEFT_SHIFT)
+        {
+            camera_velocity_ -= glm::vec3(0.0f, 0.0f, -1.0f);
+        }
     }
 }
 
@@ -46,8 +100,9 @@ renderer::renderer() :
     far_(100.0f),
     camera_(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
     model_(1.0f),
-    sensitivity_(0.01f),
-    projection_(glm::perspective(fov_, aspect_, near_, far_))
+    sensitivity_(0.001f),
+    frames_(0),
+    camera_velocity_(glm::vec3(0.0f, 0.0f, 0.0f))
 {
     mesh_->buffer_data();
 }
@@ -59,13 +114,11 @@ renderer::~renderer()
 void renderer::set_fov(float fov)
 {
     fov_ = fov;
-    projection_ = glm::perspective(fov_, aspect_, near_, far_);
 }
 
 void renderer::set_aspect_ratio(float aspect)
 {
     aspect_ = aspect;
-    projection_ = glm::perspective(fov_, aspect_, near_, far_);
 }
 void renderer::set_aspect_ratio(extent2d extent)
 {
@@ -75,20 +128,24 @@ void renderer::set_aspect_ratio(extent2d extent)
 void renderer::set_near_plane(float depth)
 {
     near_ = depth;
-    projection_ = glm::perspective(fov_, aspect_, near_, far_);
 }
 
 void renderer::set_far_plane(float depth)
 {
     far_ = depth;
-    projection_ = glm::perspective(fov_, aspect_, near_, far_);
+}
+
+glm::mat4 renderer::get_projection() const
+{
+    return glm::perspective(fov_, aspect_, near_, far_);
 }
 
 void renderer::render()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    float dt = 0.01f;
+    camera_.move(dt * camera_velocity_);
     glm::vec3 normal(0.5f, 1.0f, 0.3f);
     normal = glm::normalize(normal);
     model_ = glm::rotate(model_, glm::radians(.1f), normal);
@@ -97,8 +154,8 @@ void renderer::render()
 
     triangle_shader_.set_uniform("model", model_);
     triangle_shader_.set_uniform("view", camera_.get_view());
-    triangle_shader_.set_uniform("projection", projection_);
+    triangle_shader_.set_uniform("projection", get_projection());
 
     mesh_->render(triangle_shader_);
-
+    frames_++;
 }

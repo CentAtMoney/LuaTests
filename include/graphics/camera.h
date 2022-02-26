@@ -10,10 +10,10 @@ public:
 
     /**
      * @param pos    position of camera
-     * @param target normalized direction the camera is looking
+     * @param front  normalized direction the camera is looking
      * @param up     what direction is "up" to the camera
      */
-    camera(glm::vec3 pos, glm::vec3 target, glm::vec3 up);
+    camera(glm::vec3 pos, glm::vec3 front, glm::vec3 up);
 
     /**
      * @brief Get the view matrix
@@ -28,10 +28,10 @@ public:
     glm::vec3 get_pos() const;
 
     /**
-     * @brief Get the direction the camera is looking
+     * @brief Get what direction the camera is looking
      * @return glm::vec3 normalized direction
      */
-    glm::vec3 get_target() const;
+    glm::vec3 get_front() const;
 
     /**
      * @brief Get what direction is up for the camera
@@ -40,16 +40,22 @@ public:
     glm::vec3 get_up() const;
 
     /**
+     * @brief get what the camera is looking at
+     * @return glm::vec3 
+     */
+    glm::vec3 get_target() const;
+
+    /**
      * @brief Update the camera's position
      * @param pos glm::vec3 position relative to world
      */
     void set_pos(glm::vec3 pos);
 
     /**
-     * @brief Update what direction the camera is looking
-     * @param target normalized direction
+     * @brief update what is front to the camera
+     * @param front normalized direction
      */
-    void set_target(glm::vec3 target);
+    void set_front(glm::vec3 front);
 
     /**
      * @brief set what direction is up for the camera
@@ -66,12 +72,19 @@ public:
      */
     void rotate(float pitch, float yaw, float roll);
 
+    /**
+     * @brief move the camera by a specified amount
+     * 
+     * @param dx change in pos
+     */
+    void move(glm::vec3 dx);
+
+
 protected:
 
     glm::vec3 pos_;
-    glm::vec3 target_;
     glm::vec3 up_;
-
+    glm::vec3 front_;
 
 };
 
