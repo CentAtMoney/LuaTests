@@ -46,6 +46,12 @@ public:
     glm::vec3 get_target() const;
 
     /**
+     * @brief get the direction to the right of the camera
+     * @return glm::vec3 
+     */
+    glm::vec3 get_right() const;
+
+    /**
      * @brief Update the camera's position
      * @param pos glm::vec3 position relative to world
      */

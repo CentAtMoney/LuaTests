@@ -41,6 +41,11 @@ glm::vec3 camera::get_target() const
     return pos_ + front_;
 }
 
+glm::vec3 camera::get_right() const
+{
+    return glm::normalize(glm::cross(front_, up_));
+}
+
 void camera::set_pos(glm::vec3 pos)
 {
     pos_ = pos;
@@ -58,7 +63,7 @@ void camera::set_up(glm::vec3 up)
 
 void camera::rotate(float pitch, float yaw, float roll)
 {
-    glm::vec3 right = glm::normalize(glm::cross(front_, up_));
+    glm::vec3 right = get_right();
     front_ = glm::rotate(front_, pitch, right);
     front_ = glm::rotate(front_, yaw, up_);
     front_ = glm::rotate(front_, roll, front_);

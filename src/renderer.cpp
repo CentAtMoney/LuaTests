@@ -38,55 +38,60 @@ void renderer::notify(const std::any& object)
         key_press_event event = std::any_cast<key_press_event>(object);
         if(event.key == KEY_W)
         {
-            camera_velocity_ += glm::vec3(1.0f, 0.0f, 0.0f);
+            camera_velocity_ += camera_.get_front();
         }
         else if(event.key == KEY_S)
         {
-            camera_velocity_ += glm::vec3(-1.0f, 0.0f, 0.0f);
+            camera_velocity_ -= camera_.get_front();
         }
         else if(event.key == KEY_A)
         {
-            camera_velocity_ += glm::vec3(0.0f, 1.0f, 0.0f);
+            camera_velocity_ -= camera_.get_right();
         }
         else if(event.key == KEY_D)
         {
-            camera_velocity_ += glm::vec3(0.0f, -1.0f, 0.0f);
+            camera_velocity_ += camera_.get_right();
         }
         else if(event.key == KEY_SPACE)
         {
-            camera_velocity_ += glm::vec3(0.0f, 0.0f, 1.0f);
+            camera_velocity_ += camera_.get_up();
         }
         else if(event.key == KEY_LEFT_SHIFT)
         {
-            camera_velocity_ += glm::vec3(0.0f, 0.0f, -1.0f);
+            camera_velocity_ -= camera_.get_up();
+        }
+        else if(event.key == KEY_H)
+        {
+            camera_velocity_ = glm::vec3();
         }
     }
     else if(object.type() == typeid(key_release_event))
     {
         key_release_event event = std::any_cast<key_release_event>(object);
+
         if(event.key == KEY_W)
         {
-            camera_velocity_ -= glm::vec3(1.0f, 0.0f, 0.0f);
+            camera_velocity_ -= camera_.get_front();
         }
         else if(event.key == KEY_S)
         {
-            camera_velocity_ -= glm::vec3(-1.0f, 0.0f, 0.0f);
+            camera_velocity_ += camera_.get_front();
         }
         else if(event.key == KEY_A)
         {
-            camera_velocity_ -= glm::vec3(0.0f, 1.0f, 0.0f);
+            camera_velocity_ += camera_.get_right();
         }
         else if(event.key == KEY_D)
         {
-            camera_velocity_ -= glm::vec3(0.0f, -1.0f, 0.0f);
+            camera_velocity_ -= camera_.get_right();
         }
         else if(event.key == KEY_SPACE)
         {
-            camera_velocity_ -= glm::vec3(0.0f, 0.0f, 1.0f);
+            camera_velocity_ -= camera_.get_up();
         }
         else if(event.key == KEY_LEFT_SHIFT)
         {
-            camera_velocity_ -= glm::vec3(0.0f, 0.0f, -1.0f);
+            camera_velocity_ += camera_.get_up();
         }
     }
 }
