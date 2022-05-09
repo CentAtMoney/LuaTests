@@ -3,10 +3,16 @@
 
 #include <string>
 
+
 class logger
 {
 public:
-    static void log(std::string message);
+    void log(const std::string message);
+
+    logger* get_instance();
+private:
+    logger();
+
 };
 
 #endif

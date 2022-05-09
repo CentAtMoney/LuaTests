@@ -1,5 +1,8 @@
+global_table = {}
+global_table.x = 501
+global_table.y = 502
 
-require("my_package")
-my_print()
-print("Not hello world")
+global_x = 891
+global_y = 890
+
 

@@ -1,22 +1,25 @@
 #include "application.h"
+#include "window/window_factory.h"
 #include <iostream>
 application::application(application::create_info info) :
     running_{true},
     publisher::publisher(info.subscribers),
-    window_(info.window_create_info),
+    window_(nullptr),
     renderer_{}
 {   
+    window_factory window_factory;
+    window_factory.create_glfw_window("glfw window", 800, 600);
 
-    window_.disable_cursor();
+    this->window_->disable_cursor();
 
     // application subscribes to window events
-    this->window_.subscribe(this);
+    this->window_->subscribe(this);
 
     // renderer subscribes to application events
     this->subscribe(&this->renderer_);
 
     window_create_event window_create_event = {
-        .window = &this->window_
+        .window = this->window_
     };
     this->publish(window_create_event);
 
@@ -42,9 +45,9 @@ void application::run()
 {
     while(this->running())
     {
-        this->window_.poll();
+        this->window_->poll();
         this->renderer_.render();
-        this->window_.swap_buffers();
+        this->window_->swap_buffers();
     }
 }
 

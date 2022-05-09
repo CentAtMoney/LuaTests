@@ -20,7 +20,6 @@ class application : public publisher, subscriber
 public:
     struct create_info
     {
-        window::create_info window_create_info;
         std::vector<subscriber*> subscribers;
     };
     application(application::create_info info);
@@ -33,7 +32,7 @@ public:
     bool running() const;
 
 private:
-    window window_;
+    window* window_;
     renderer renderer_;
     bool running_;
 };

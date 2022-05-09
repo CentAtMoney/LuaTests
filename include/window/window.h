@@ -1,53 +1,36 @@
+// window.h
 #ifndef WINDOW_WINDOW_H
 #define WINDOW_WINDOW_H
 
+#include "common.h"
 #include "publisher.h"
 #include "graphics/extent.h"
 
-#include <string>
-#include <GLFW/glfw3.h>
 
-
-using window_id = uint32_t;
-
-// handle to some window implementation
 class window : public publisher
 {
 public:
 
+    virtual ~window() {}
 
-    struct create_info
-    {
-        std::string title;
-        uint32_t width;
-        uint32_t height;
-    };
-    window(window::create_info info);
+    virtual void poll() = 0;
 
-    ~window();
+    virtual void swap_buffers() = 0;
 
-    void poll();
-    void swap_buffers();
+    virtual void disable_cursor() = 0;
 
+    virtual void enable_cursor() = 0;
 
-    extent2d get_framebuffer_extent();
+    virtual extent2d get_framebuffer_extent() = 0;
 
     // screen coordinates 
-    extent2d get_window_extent();
-
-    void disable_cursor();
-
-    void enable_cursor();
-
-private:
-
-    GLFWwindow* glfw_window_;
+    virtual extent2d get_window_extent() = 0;
 
 };
 
+
+
 using window_t = window;
-
-
 
 struct window_open_event
 {

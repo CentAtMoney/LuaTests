@@ -20,11 +20,11 @@ public:
 
     publisher(std::vector<subscriber*> subscribers);
 
-    void subscribe(subscriber* subscriber);
+    virtual void subscribe(subscriber* subscriber);
 
-    void unsubscribe(subscriber* subsriber);
+    virtual void unsubscribe(subscriber* subsriber);
 
-    void publish(const std::any& object);
+    virtual void publish(const std::any& object);
 
     ~publisher();
 
