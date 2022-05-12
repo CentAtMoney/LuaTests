@@ -1,10 +1,8 @@
 #ifndef PUBLISHER_H
 #define PUBLISHER_H
-#include "subscriber.h"
 
-#include <forward_list>
-#include <any>
-#include <vector>
+#include "subscriber.h"
+#include "common.h"
 
 // event sent to subscriber upon publisher destruction and or
 // subscriber unsubscription
@@ -22,9 +20,11 @@ public:
 
     virtual void subscribe(subscriber* subscriber);
 
-    virtual void unsubscribe(subscriber* subsriber);
+    virtual void unsubscribe(subscriber* subscriber);
 
     virtual void publish(const std::any& object);
+
+    virtual void publish(std::shared_ptr<event> e);
 
     ~publisher();
 

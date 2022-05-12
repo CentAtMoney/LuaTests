@@ -20,7 +20,7 @@ public:
 
     glfw_window(glfw_window::create_info);
 
-    ~glfw_window();
+    virtual ~glfw_window();
     
     virtual void poll() override;
 

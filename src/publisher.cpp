@@ -33,6 +33,14 @@ void publisher::publish(const std::any& object)
     }
 }
 
+void publisher::publish(std::shared_ptr<event> e)
+{
+    for(subscriber* subscriber : this->subscribers_)
+    {
+        subscriber->notify(e);
+    }
+}
+
 publisher::~publisher()
 {
     unsubscribe_event e;
